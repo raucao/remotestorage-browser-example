@@ -230,9 +230,9 @@ define([
       $('#content').append($('<div id="notice-container">'));
 
       if(item.contentType.match(/^image\/.*/)) {
-        displayImage(path, item.data, item.mimeType);
+        displayImage(path, item.data, item.contentType);
       } else {
-        displayForm(path, item.data, item.mimeType, mode);
+        displayForm(path, item.data, item.contentType, mode);
       }
     }
 
