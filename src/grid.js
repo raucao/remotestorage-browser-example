@@ -216,6 +216,8 @@ define([
     $('#content').append(makeBreadcrumbs(path));
 
     function itemLoaded(item) {
+      console.debug('item:', item);
+
       var btnGroup = $('<div class="btn-group"></div>');
       btnGroup.append(makeButton("back", "Back", "icon-arrow-left"));
       btnGroup.append(makeButton("save", "Save", "icon-ok"));
@@ -227,7 +229,7 @@ define([
       $('#content').append(btnGroup);
       $('#content').append($('<div id="notice-container">'));
 
-      if(item.mimeType.match(/^image\/.*/)) {
+      if(item.contentType.match(/^image\/.*/)) {
         displayImage(path, item.data, item.mimeType);
       } else {
         displayForm(path, item.data, item.mimeType, mode);
