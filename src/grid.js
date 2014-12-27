@@ -6,7 +6,7 @@ define([
   './common'
 ], function(require, jquery, remoteStorage, _common) {
 
-  var util = remoteStorage.util;
+  var util = RemoteStorage.util;
   var root = remoteStorage.scope('/');
 
   function common() {
@@ -22,7 +22,7 @@ define([
 
   function pathParts(path) {
     var parts = path.split('/');
-    return util.isDir(path) ? parts.slice(1, -1) : parts.slice(1);
+    return util.isFolder(path) ? parts.slice(1, -1) : parts.slice(1);
   }
 
   function setTitle(title) {
@@ -31,7 +31,7 @@ define([
 
   function openPath(path, extra) {
     var baseName = util.baseName(path);
-    if(util.isDir(path)) {
+    if(util.isFolder(path)) {
       setTitle("Browse: " + baseName);
       openDirectory(path, extra);
     } else {
@@ -58,7 +58,7 @@ define([
       ul.append(li);
     });
     ul.append($('<li class="active">').text(parts.slice(-1)[0]));
-    if(util.isDir(path) && parts.length > 0) {
+    if(util.isFolder(path) && parts.length > 0) {
       ul.append(divider);
     }
     return ul;
@@ -66,8 +66,8 @@ define([
 
   function sortKeys(keys) {
     return keys.sort(function(a, b) {
-      var aDir = util.isDir(a);
-      var bDir = util.isDir(b);
+      var aDir = util.isFolder(a);
+      var bDir = util.isFolder(b);
       if(aDir && !bDir) {
         return -1;
       } else if(bDir && !aDir) {
@@ -116,14 +116,14 @@ define([
         function renderRow(key)  {
           var row = $('<tr>');
           row.attr('data-path', path + key);
-          row.append($('<td>').append($('<span>').addClass(util.isDir(path + key) ? 'icon-folder-open' : 'icon-file')));
+          row.append($('<td>').append($('<span>').addClass(util.isFolder(path + key) ? 'icon-folder-open' : 'icon-file')));
           row.append($('<td class="name">').text(key));
           return row;
         }
 
         if(! items) {
           if(path != '/') {
-            common().jumpTo(util.containingDir(path));
+            common().jumpTo(util.containingFolder(path));
           } else {
             throw("BUG: root node doesn't exist.");
           }
@@ -163,7 +163,7 @@ define([
   function displayForm(path, data, mimeType) {
     var text = (typeof(data) == 'string') ? data : JSON.stringify(data, undefined, 2);
     var form = $('<form id="editor">').attr('data-path', path);
-    var filename = util.isDir(path) ? '' : util.baseName(path);
+    var filename = util.isFolder(path) ? '' : util.baseName(path);
     
     form.append(inputRow('Filename', 'filename', filename, 'text'));
     form.append(inputRow('MIME type', 'mimeType', mimeType, 'text'));
@@ -234,7 +234,7 @@ define([
       }
     }
 
-    if(util.isDir(path)) {
+    if(util.isFolder(path)) {
       // new file
       itemLoaded({ data: '', mimeType: '' });
     } else {
@@ -267,7 +267,7 @@ define([
     }
     path = container.attr('data-path');
 
-    jumpTo(util.containingDir(path) || '/');
+    jumpTo(util.containingFolder(path) || '/');
   });
 
   function showNotice(message, actions) {
@@ -344,7 +344,7 @@ define([
       }
     }
 
-    if(util.isDir(path)) {
+    if(util.isFolder(path)) {
       baseName = fileName;
       path += baseName;
     }
@@ -358,7 +358,7 @@ define([
         }
       }).
       then(function() {
-        jumpTo(util.containingDir(newPath));
+        jumpTo(util.containingFolder(newPath));
       });
   });
 
@@ -374,7 +374,7 @@ define([
     disableAllActions();
 
     root.remove(path).then(function() {
-      jumpTo(util.containingDir(path));
+      jumpTo(util.containingFolder(path));
     });
   });
 

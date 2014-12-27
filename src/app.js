@@ -32,11 +32,15 @@ define([
       } catch(exc) { console.error('exc', exc.stack); }
     });
 
-    remoteStorage.on('disconnect', function() {
+    remoteStorage.on('disconnected', function() {
       $(document.body).removeClass('connected');
     });
 
-    remoteStorage.access.claim('root', 'rw');
+    remoteStorage.on('not-connected', function() {
+      $(document.body).removeClass('connected');
+    });
+
+    remoteStorage.access.claim('*', 'rw');
 
     $(window).bind('popstate', function() {
       var md = document.location.hash.match(/^#!(.+?)(?:!(.+)|)$/);

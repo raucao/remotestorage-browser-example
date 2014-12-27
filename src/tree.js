@@ -1,12 +1,15 @@
 define([
   'require',
   'jquery',
+  'bluebird',
   'remotestorage',
   './common'
-], function(require, $, remoteStorage, common) {
+], function(require, $, Promise, remoteStorage, common) {
 
-  var parentPath = remoteStorage.util.containingDir;
-  var isDir = remoteStorage.util.isDir;
+  console.log('remoteStorage: ', remoteStorage);
+
+  var parentPath = RemoteStorage.util.containingFolder;
+  var isDir = RemoteStorage.util.isFolder;
 
   function jumpTo() {
     if(! common) {
@@ -17,11 +20,11 @@ define([
 
   var root = remoteStorage.scope('/');
 
-  root.on('conflict', function(conflict) {
-    if(conflict.path == '/.open-trees') {
-      conflict.resolve('local');
-    }
-  });
+  // root.on('conflict', function(conflict) {
+  //   if(conflict.path == '/.open-trees') {
+  //     conflict.resolve('local');
+  //   }
+  // });
 
   function pathParts(path) {
     if(! path) {
@@ -59,21 +62,24 @@ define([
     }
 
     root.getListing(path).then(function(items) {
-      if(items) {
-        items = items.sort();
-        var hasIcon = false;
-        items.forEach(function(item) {
-          var itemPath = path + item;
-          if(isDir(itemPath) && findDirLi(itemPath).length === 0) {
-            if(! hasIcon) {
-              iconElement.removeClass('icon-none');
-              iconElement.addClass('icon-chevron-right');
-              hasIcon = true;
-            }
-            parentElement.append(buildDirNode(itemPath, item));
+      if (!items || Object.keys(items).length === 0) { return }
+
+      var itemList = Object.keys(items).sort();
+
+      var hasIcon = false;
+
+      itemList.forEach(function(itemName) {
+        var itemPath = path + itemName;
+
+        if(isDir(itemPath) && findDirLi(itemPath).length === 0) {
+          if(! hasIcon) {
+            iconElement.removeClass('icon-none');
+            iconElement.addClass('icon-chevron-right');
+            hasIcon = true;
           }
-        });
-      }
+          parentElement.append(buildDirNode(itemPath, itemName));
+        }
+      });
     });
   }
 
@@ -86,7 +92,7 @@ define([
     root.getListing(path).then(function(listing) {
       if(listing.length === 0) {
         return;
-      } 
+      }
       expandDir(path);
       loadChildren(path);
     });
@@ -174,7 +180,7 @@ define([
       closeTree(li);
     }
   });
-  
+
   return {
     setLoading: setLoading,
     open: openTree,
