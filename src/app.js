@@ -1,22 +1,26 @@
 define([
   'jquery',
   'bootstrap',
-  'remotestorage',
+  'RemoteStorage',
+  'Widget',
   './common',
   './tree',
   './settings'
-], function($, _ignored, remoteStorage, common, tree, settings) {
+], function($, _ignored, RemoteStorage, Widget, common, tree, settings) {
 
-  window.remoteStorage = remoteStorage;
+  const remoteStorage = new RemoteStorage();
   remoteStorage.enableLog();
 
-  remoteStorage.setApiKeys('googledrive', {
-    client_id: '76638044554.apps.googleusercontent.com'
+  remoteStorage.setApiKeys({
+    googledrive: '76638044554.apps.googleusercontent.com'
   });
 
   $(function() {
 
-    remoteStorage.displayWidget();
+    remoteStorage.access.claim('*', 'rw');
+
+    const widget = new Widget(remoteStorage);
+    widget.attach();
 
     tree.setLoading('/');
     tree.setLoading('/public/');
@@ -39,8 +43,6 @@ define([
     remoteStorage.on('not-connected', function() {
       $(document.body).removeClass('connected');
     });
-
-    remoteStorage.access.claim('*', 'rw');
 
     $(window).bind('popstate', function() {
       var md = document.location.hash.match(/^#!(.+?)(?:!(.+)|)$/);

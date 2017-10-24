@@ -7,7 +7,7 @@ define([
     tree.select(path);
     grid.openPath(path, extra);
   }
-  
+
   function jumpTo(path) {
     history.pushState(null, null, '#!' + path);
     openPath(path);

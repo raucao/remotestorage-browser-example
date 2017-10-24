@@ -1,11 +1,11 @@
 define([
   'require',
   'jquery',
-  'bluebird',
-  'remotestorage',
+  'RemoteStorage',
   './common'
-], function(require, $, Promise, remoteStorage, common) {
+], function(require, $, RemoteStorage, common) {
 
+  remoteStorage = new RemoteStorage();
   console.log('remoteStorage: ', remoteStorage);
 
   var parentPath = RemoteStorage.util.containingFolder;
@@ -18,6 +18,7 @@ define([
     common.jumpTo.apply(common, arguments);
   }
 
+  remoteStorage.access.claim('*', 'rw');
   var root = remoteStorage.scope('/');
 
   // root.on('conflict', function(conflict) {

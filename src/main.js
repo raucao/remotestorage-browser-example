@@ -1,10 +1,10 @@
 
 require.config({
   paths: {
-    "bluebird"      : "../lib/bluebird",
-    "remotestorage" : "../lib/remotestorage-nocache.amd",
+    "RemoteStorage" : "../lib/remotestorage",
     "jquery"        : "../lib/jquery-1.8.2",
-    "bootstrap"     : "../lib/bootstrap"
+    "bootstrap"     : "../lib/bootstrap",
+    "Widget"        : "../lib/widget"
   }
 });
 

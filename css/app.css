@@ -7,6 +7,10 @@
     display:block;
 }
 
+body {
+    position: relative;
+}
+
 body.connected #connected {
     display:block;
 }
@@ -158,4 +162,10 @@ body.connected #disconnected {
 
 #content .node-table {
     clear: both;
+}
+
+#remotestorage-widget {
+    position: absolute;
+    top: 0;
+    right: 0
 }

@@ -2,11 +2,14 @@
 define([
   'require',
   'jquery',
-  'remotestorage',
+  'RemoteStorage',
   './common'
-], function(require, jquery, remoteStorage, _common) {
+], function(require, jquery, RemoteStorage, _common) {
+
+  const remoteStorage = new RemoteStorage();
 
   var util = RemoteStorage.util;
+  remoteStorage.access.claim('*', 'rw');
   var root = remoteStorage.scope('/');
 
   function common() {
